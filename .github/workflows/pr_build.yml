@@ -21,3 +21,15 @@ jobs:
 
     - name: Build
       run: make build
+
+    - name: Test fly
+      working-directory: ./fly
+      run: make test
+
+    - name: Test api
+      working-directory: ./api
+      run: make test
+
+    - name: Test spy
+      working-directory: ./spy
+      run: make test
