@@ -17,7 +17,7 @@ doc:
 
 
 test:
-	go test -v -cover ./...
-
+	cd api && go test -v -cover ./...
+	cd fly && go test -v -cover ./...
 
 .PHONY: build doc test
