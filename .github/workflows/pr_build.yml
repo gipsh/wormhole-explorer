@@ -21,7 +21,10 @@ jobs:
 
     - name: Build
       run: make build
-
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
     - name: Test fly
       working-directory: ./fly
       run: make test
