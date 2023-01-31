@@ -4,6 +4,8 @@ on:
   create:
     tags:
       - v*      
+  push:
+    branches: [ main ]
 
 jobs:
 
@@ -19,3 +21,34 @@ jobs:
 
     - name: Build
       run: make build
+    
+    - name: Upload fly artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: fly
+        path: fly/fly
+
+    - name: Upload api artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: api
+        path: api/api
+
+    - name: Upload spy artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: spy
+        path: spy/spy
+
+
+  deploy-fly:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: fly
+
+
+
