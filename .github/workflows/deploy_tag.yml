@@ -9,47 +9,9 @@ on:
 
 jobs:
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.19
-
-    - name: Build
-      run: make build
-    
-    - name: Upload fly artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: fly
-        path: fly/fly
-
-    - name: Upload api artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: api
-        path: api/api
-
-    - name: Upload spy artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: spy
-        path: spy/spy
-
-
   deploy-fly:
-    needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download math result for job 1
-        uses: actions/download-artifact@v3
-        with:
-          name: fly
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
