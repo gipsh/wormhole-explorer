@@ -11,6 +11,8 @@ jobs:
 
   deploy-fly:
     runs-on: ubuntu-latest
+    environment: staging
+    
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
