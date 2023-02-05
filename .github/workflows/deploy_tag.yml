@@ -50,10 +50,10 @@ jobs:
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
         with:
-          version: $EKS_CLUSTER_VERSION
+          version: ${{ vars.EKS_CLUSTER_VERSION }}
         id: install
 
 
       - name: Update kube config
-        run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+        run: aws eks update-kubeconfig --name ${{ vars.EKS_CLUSTER_NAME }} --region ${{ vars.AWS_REGION }}
 
