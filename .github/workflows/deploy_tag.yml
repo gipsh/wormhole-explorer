@@ -9,7 +9,6 @@ on:
     
 
 env:
-  AWS_REGION: us-east-2                 
   ECR_REPOSITORY: test-ecr
   BUILD: ${{ github.run_id }}-${{ github.run_number }}
 
@@ -48,36 +47,13 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:api-$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:api-$IMAGE_TAG"
 
-
-  deploy-fly:
-    runs-on: ubuntu-latest
-    environment: staging
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
-          
-      - name: Checkout
-        uses: actions/checkout@v2
+          version: 'v1.21.3'
+        id: install
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        working-directory: fly
-        run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build --build-arg BUILD=${{ env.BUILD }} -t $ECR_REGISTRY/$ECR_REPOSITORY:fly-$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:fly-$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:fly-$IMAGE_TAG"
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
 
