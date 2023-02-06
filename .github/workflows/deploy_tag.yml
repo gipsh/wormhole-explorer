@@ -57,3 +57,6 @@ jobs:
       - name: Update kube config
         run: aws eks update-kubeconfig --name ${{ vars.EKS_CLUSTER_NAME }} --region ${{ vars.AWS_REGION }}
 
+      - name: Deploy image to Amazon EKS
+        run: |
+          kubectl apply -f deploy/api/api-service.yml
